@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace KPhoen\RulerZBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Clear the cache.
  *
  * @author Kévin Gomez <contact@kevingomez.fr>
  */
-class CacheClearCommand extends ContainerAwareCommand
+class CacheClearCommand extends Command
 {
+    protected $container;
+
+    public function __construct(string $name = null, ContainerBuilder $container)
+    {
+        $this->container = $container;
+        parent::__construct($name);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -31,8 +40,8 @@ class CacheClearCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cacheDir = $this->getContainer()->getParameter('rulerz.cache_directory');
-        $filesystem = $this->getContainer()->get('filesystem');
+        $cacheDir = $this->container->getParameter('rulerz.cache_directory');
+        $filesystem = $this->container->get('filesystem');
 
         if (!is_writable($cacheDir)) {
             throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $cacheDir));

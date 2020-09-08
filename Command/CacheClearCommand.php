@@ -16,14 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class CacheClearCommand extends Command
 {
-    protected $container;
-
-    public function __construct(ContainerBuilder $container)
-    {
-        parent::__construct();
-        $this->container = $container;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -40,8 +32,9 @@ class CacheClearCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cacheDir = $this->container->getParameter('rulerz.cache_directory');
-        $filesystem = $this->container->get('filesystem');
+        $container = $this->compileContainer();
+        $cacheDir = $container->getParameter('rulerz.cache_directory');
+        $filesystem = $container->get('filesystem');
 
         if (!is_writable($cacheDir)) {
             throw new \RuntimeException(sprintf('Unable to write in the "%s" directory', $cacheDir));
@@ -51,5 +44,18 @@ class CacheClearCommand extends Command
             $filesystem->remove($cacheDir);
             $filesystem->mkdir($cacheDir);
         }
+    }
+
+    private function compileContainer(): ContainerBuilder
+    {
+        $kernel = clone $this->getApplication()->getKernel();
+        $kernel->boot();
+
+        $method = new \ReflectionMethod($kernel, 'buildContainer');
+        $method->setAccessible(true);
+        $container = $method->invoke($kernel);
+        $container->getCompiler()->compile($container);
+
+        return $container;
     }
 }

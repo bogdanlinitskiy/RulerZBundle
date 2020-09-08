@@ -20,7 +20,7 @@
     "require": {
         "php": ">=7.1",
         "kphoen/rulerz": "~0.17,>=0.19.3",
-        "kphoen/rulerz-bridge": "^1.0",
+        "kphoen/rulerz-bridge": "dev-symfony-bc",
         "symfony/framework-bundle": "^3.0|^4.0"
     },
     "require-dev": {
@@ -29,5 +29,11 @@
         "mikey179/vfsStream": "^1.6",
         "matthiasnoback/symfony-dependency-injection-test": "^3.0",
         "liip/rmt": "^1.2"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bogdanlinitskiy/rulerz-bridge"
+        }
+    ]
 }

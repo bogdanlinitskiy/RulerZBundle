@@ -18,10 +18,10 @@ class CacheClearCommand extends Command
 {
     protected $container;
 
-    public function __construct(string $name = null, ContainerBuilder $container)
+    public function __construct(ContainerBuilder $container)
     {
+        parent::__construct();
         $this->container = $container;
-        parent::__construct($name);
     }
 
     /**

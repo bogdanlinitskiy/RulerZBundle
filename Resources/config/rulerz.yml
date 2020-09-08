@@ -26,4 +26,3 @@ services:
         public: true
         tags:
             - {name: console.command }
-        arguments:  [ Symfony\Component\DependencyInjection\ContainerBuilder ]
